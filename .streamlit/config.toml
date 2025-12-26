@@ -1,0 +1,7 @@
+[theme]
+base = "dark"
+primaryColor = "#00E5FF"   # Electric Purple
+backgroundColor = "#0E1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#EDEDED"
+font = "sans serif"
