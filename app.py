@@ -17,6 +17,7 @@ def load_stt_service(model="small"):
 def load_polisher_service(model="gemini-2.5-flash"):
     return Polisher(model) 
 
+
 #load environment varibale once
 load_dotenv() 
 
