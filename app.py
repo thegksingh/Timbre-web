@@ -56,13 +56,15 @@ def main():
         tts_input_text = st.text_area(
             "Enter text to convert to speech:",
             max_chars = 20000,
-            value = "Welcome to TIMBRE, your all-in-one AI-powered audio and text processing platform!"
+            value = "Welcome to TIMBRE, your all-in-one AI-powered audio and text processing platform!",
+            key = "tts-input"
         )
         #voice slection with default value 
         #TODO: better selection for all voices
         voice = st.text_input(
             "Enter voice:",
-            value = "en-AU-NatashaNeural"
+            value = "en-AU-NatashaNeural",
+            key = "tts-voice"
         )
 
         #rate and pitch selection with sliders
@@ -74,7 +76,8 @@ def main():
                 max_value = 100,
                 value = 0,
                 step = 1,
-                format = "%d%%"
+                format = "%d%%",
+                key = "tts-rate"
             )
         with col2:
             pitch_value = st.slider(
@@ -83,7 +86,8 @@ def main():
                 max_value = 100,
                 value = 0,
                 step = 1,
-                format = "%dHz"
+                format = "%dHz",
+                key = "tts-pitch"
             )
 
         #converting rate_value and pitch_value to string 
@@ -93,7 +97,8 @@ def main():
         #output filename
         output_audio_filename = st.text_input(
             "Output audio filename:",
-            value = "Result"
+            value = "Result",
+            key = "tts-audiofile-name"
         )
         
         #generate button and handling generation
@@ -154,7 +159,7 @@ def main():
         st.markdown("<h3 style='color:#00E5FF;'>Speech to text service</h3>", unsafe_allow_html=True)
         
         #storing uploded file into varaible into input_audio
-        input_audio = st.file_uploader("Upload audio file:", type=["wav","mp3","m4a"])
+        input_audio = st.file_uploader("Upload audio file:", type=["wav","mp3","m4a"],key="speech-to-text")
         
         #generate button and handling generation
         if st.button(
@@ -187,7 +192,8 @@ def main():
                             st.text_area(
                                 "Transcribed Text:",
                                 value = stt_enhancer_result,
-                                height = 200
+                                height = 200,
+                                key = "stt-result"
                             )
                     
                             #success message
@@ -209,10 +215,10 @@ def main():
         if user_choice == "Translator":
 
             #getting user text
-            translation_input_text = st.text_area("Enter text for translation:")
+            translation_input_text = st.text_area("Enter text for translation:",key = "input-for-translation")
             
             #getting target language
-            target_language = st.text_input("Enter target language:")
+            target_language = st.text_input("Enter target language:", key = "language-input")
 
             #generate button and handling translation
             if st.button(
@@ -245,7 +251,8 @@ def main():
                             st.text_area(
                                 "Translation result",
                                 value = translator_result,
-                                height = 200
+                                height = 200,
+                                key = "translation-result"
                             )
                         
                             #success message
@@ -261,7 +268,7 @@ def main():
         elif user_choice == "Enhancer":
 
             #getting user text
-            enhancer_input_text = st.text_area("Enter text for enhacement:")
+            enhancer_input_text = st.text_area("Enter text for enhacement:", key = "enhancer-input")
 
             #getting target lstyle
             target_style = st.selectbox(
@@ -315,7 +322,8 @@ def main():
                             st.text_area(
                                 "Enhanced text",
                                 value = enhancer_result,
-                                height = 200
+                                height = 200,
+                                key = "enhancer-result"
                             )
                         
                             #success message
@@ -330,113 +338,254 @@ def main():
     #speech to speech
     if users_input == "Speech to Speech":
 
-        #storing uploded file into varaible into input_audio
-        sts_input_audio = st.file_uploader("Upload audio file:", type=["wav","mp3","m4a"])
-
-        #voice slection with default value 
-        #TODO: better selection for all voices
-        voice = st.text_input(
-            "Enter voice:",
-            value = "en-AU-NatashaNeural"
-        )
-
-        #rate and pitch selection with sliders
-        col1, col2 = st.columns(2)
-        with col1:
-            rate_value = st.slider(
-                "Select speech rate:",
-                min_value = -100,
-                max_value = 100,
-                value = 0,
-                step = 1,
-                format = "%d%%"
-            )
-        with col2:
-            pitch_value = st.slider(
-                "Select speech pitch:",
-                min_value = -100,
-                max_value = 100,
-                value = 0,
-                step = 1,
-                format = "%dHz"
-            )
-
-        #converting rate_value and pitch_value to string 
-        rate = f"{rate_value:+d}%"
-        pitch = f"{pitch_value:+d}Hz"
-
-        #output filename
-        output_audio_filename = st.text_input(
-            "Output audio filename:",
-            value = "Result"
+        choosen = st.selectbox(
+            "",
+            options=[
+                "Same-language voice conversion",
+                "Cross-language speech translation",
+            ],
+            index = None
         )
         
-        #generate button and handling speech to speech
-        if st.button(
-            label = "Generate Speech",
-            type = "primary",
-            width = "stretch"
+        if choosen == "Same-language voice conversion":
+
+            #storing uploded file into varaible into input_audio
+            sts_input_audio = st.file_uploader("Upload audio file:", type=["wav","mp3","m4a"],key="stp-same-language")
+
+            #voice slection with default value 
+            #TODO: better selection for all voices
+            voice = st.text_input(
+                "Enter voice:",
+                value = "en-AU-NatashaNeural"
+            )
+
+            #rate and pitch selection with sliders
+            col1, col2 = st.columns(2)
+            with col1:
+                rate_value = st.slider(
+                    "Select speech rate:",
+                    min_value = -100,
+                    max_value = 100,
+                    value = 0,
+                    step = 1,
+                    format = "%d%%",
+                    key = "sts-same-lang-rate"
+                )
+            with col2:
+                pitch_value = st.slider(
+                    "Select speech pitch:",
+                    min_value = -100,
+                    max_value = 100,
+                    value = 0,
+                    step = 1,
+                    format = "%dHz",
+                    key = "sts-same-lang-pitch"
+                )
+
+            #converting rate_value and pitch_value to string 
+            rate = f"{rate_value:+d}%"
+            pitch = f"{pitch_value:+d}Hz"
+
+            #output filename
+            output_audio_filename = st.text_input(
+                "Output audio filename:",
+                value = "Result",
+                key = "sts-same-lang-outfile-name"
+            )
+        
+            #generate button and handling same language speech to speech
+            if st.button(
+                label = "Generate Speech",
+                type = "primary",
+                width = "stretch"
             ):
             
-            #error handling if no input auido file and voice
-            if not sts_input_audio:
-                st.error("Upload audio file")
-                st.stop()
-            if not voice.strip():
-                st.error("Please enter a voice.")
-                st.stop()
+                #error handling if no input auido file and voice
+                if not sts_input_audio:
+                   st.error("Upload audio file")
+                   st.stop()
+                if not voice.strip():
+                   st.error("Please enter a voice.")
+                   st.stop()
             
-            #error handling
-            try:
+                #error handling
+                try:
                 
-                #shwoing spinner while converting speech
-                with st.spinner("Generating Speech"):
+                    #shwoing spinner while converting speech
+                    with st.spinner("Generating Speech"):
 
-                    #converting audio file into text
-                    sts_output_text = stt_service.generate(sts_input_audio)
+                        #converting audio file into text
+                        sts_output_text = stt_service.generate(sts_input_audio)
                     
-                    #enhancing text to ensure grammar is correct
-                    if sts_output_text: 
-                        sts_enhancer_result = polisher_service.enhancer(
-                            text = sts_output_text,
-                            style = ""
-                        )
+                        #enhancing text to ensure grammar is correct
+                        if sts_output_text: 
+                            sts_enhancer_result = polisher_service.enhancer(
+                               text = sts_output_text,
+                               style = ""
+                            )
                         
-                        #converting stt output (text) into selected voice output
-                        output_audio = asyncio.run(
-                            tts_service.generate_tts(
-                                text = sts_enhancer_result,
-                                voice = voice,
-                                rate = rate,
-                                pitch = pitch
+                            #converting stt output (text) into selected voice output
+                            output_audio = asyncio.run(
+                                tts_service.generate_tts(
+                                   text = sts_enhancer_result,
+                                   voice = voice,
+                                   rate = rate,
+                                   pitch = pitch
+                                )
                             )
-                        )
 
-                        if output_audio:
-                            st.audio(
-                            output_audio,
-                            format = "audio/wav"
-                            )
+                            if output_audio:
+                                st.audio(
+                                output_audio,
+                                format = "audio/wav"
+                                )
                     
-                            #success message
-                            st.success("Speech generated successfully!")
+                                #success message
+                                st.success("Speech generated successfully!")
                     
-                            #celebrate TTS succss using ballons
-                            st.snow()
+                                #celebrate TTS succss using ballons
+                                st.snow()
 
-                            #download button
-                            st.download_button(
-                                label = "Download Audio",
-                                data = output_audio,
-                                file_name = f"{output_audio_filename}.wav",
-                                mime = "audio/wav",
-                                type = "primary",
-                                width = "stretch"
+                                #download button
+                                st.download_button(
+                                    label = "Download Audio",
+                                    data = output_audio,
+                                    file_name = f"{output_audio_filename}.wav",
+                                    mime = "audio/wav",
+                                    type = "primary",
+                                    width = "stretch"
+                                )
+       
+
+                except Exception as e:
+                    st.error(f"An error occurred during text generation: {e}")
+
+        if choosen == "Cross-language speech translation":
+             #storing uploded file into varaible into input_audio
+            sts_input_audio_dif = st.file_uploader("Upload audio file:", type=["wav","mp3","m4a"],key="sts-diff-language")
+
+            #target langauge to convert
+            sts_target_language = st.text_input(
+                label = "Enter language",
+                value = "English"
+            ) 
+
+            #voice slection with default value 
+            #TODO: better selection for all voices
+            voice = st.text_input(
+                "Enter voice:",
+                value = "en-AU-NatashaNeural"
+            )
+            
+            #rate and pitch selection with sliders
+            col1, col2 = st.columns(2)
+            with col1:
+                rate_value = st.slider(
+                    "Select speech rate:",
+                    min_value = -100,
+                    max_value = 100,
+                    value = 0,
+                    step = 1,
+                    format = "%d%%",
+                    key = "sts-dif-lang-rate"
+                )
+            with col2:
+                pitch_value = st.slider(
+                    "Select speech pitch:",
+                    min_value = -100,
+                    max_value = 100,
+                    value = 0,
+                    step = 1,
+                    format = "%dHz",
+                    key = "sts-dif-lang-pitch"
+                )
+
+            #converting rate_value and pitch_value to string 
+            rate = f"{rate_value:+d}%"
+            pitch = f"{pitch_value:+d}Hz"
+
+            #output filename
+            output_audio_filename = st.text_input(
+                "Output audio filename:",
+                value = "Result",
+                key = "sts-dif-lang_outputfile-name"
+            )
+            
+            #generate button and handling different language speech to speech
+            if st.button(
+                "Translate speech",
+                type = "primary",
+                width = "stretch"
+            ):
+                 
+                #error handling if no input auido file and voice and language
+                if not sts_input_audio_dif:
+                   st.error("Upload audio file")
+                   st.stop()
+                if not voice.strip():
+                   st.error("Please enter a voice.")
+                   st.stop()
+                if not sts_target_language.strip():
+                    st.error("Language can't be empty")
+                    st.stop()
+
+                #error handling
+                try:
+                
+                    #shwoing spinner while performing stt-translation-enhancement-tts
+                    with st.spinner("Generating Speech"):
+
+                        #converting audio file into text
+                        sts_dif_output_text = stt_service.generate(sts_input_audio_dif)
+                        
+                        #translating text to target language and detecting valid language
+                        if sts_dif_output_text:
+                            sts_translator_result = polisher_service.translator(
+                                text = sts_dif_output_text,
+                                language = sts_target_language
                             )
+                             
+                            #enhancing text to ensure grammar is correct
+                            if sts_translator_result: 
+                                sts_enhancer_result_dif = polisher_service.enhancer(
+                                    text = sts_translator_result,
+                                    style = ""
+                                )
 
-            except Exception as e:
-                st.error(f"An error occurred during text generation: {e}")
+                                #generating audio
+                                output_audio = asyncio.run(
+                                    tts_service.generate_tts(
+                                        text = sts_enhancer_result_dif,
+                                        voice = voice,
+                                        rate = rate,
+                                        pitch = pitch
+                                    )
+                                )  
+        
+                                if output_audio:
+                                    st.audio(
+                                    output_audio,
+                                    format = "audio/wav"
+                                )
+                    
+                                #success message
+                                st.success("Speech generated successfully!")
+                    
+                                #celebrate STS succss using snow
+                                st.snow()
 
+                                #download button
+                                st.download_button(
+                                    label = "Download Audio",
+                                    data = output_audio,
+                                    file_name = f"{output_audio_filename}.wav",
+                                    mime = "audio/wav",
+                                    type = "primary",
+                                    width = "stretch"
+                                )
+
+                except Exception as e:
+                    st.error(f"An error occurred during text generation: {e}")
 
 if __name__ == "__main__":
     main()
