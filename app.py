@@ -318,5 +318,110 @@ def main():
 
                 except Exception as e:
                     st.error(f"An error occured during enhancement: {e}")
+
+    #speech to speech
+    if users_input == "Speech to Speech":
+
+        #storing uploded file into varaible into input_audio
+        sts_input_audio = st.file_uploader("Upload audio file:", type=["wav","mp3","m4a"])
+
+        #voice slection with default value 
+        #TODO: better selection for all voices
+        voice = st.text_input(
+            "Enter voice:",
+            value = "en-AU-NatashaNeural"
+        )
+
+        #rate and pitch selection with sliders
+        col1, col2 = st.columns(2)
+        with col1:
+            rate_value = st.slider(
+                "Select speech rate:",
+                min_value = -100,
+                max_value = 100,
+                value = 0,
+                step = 1,
+                format = "%d%%"
+            )
+        with col2:
+            pitch_value = st.slider(
+                "Select speech pitch:",
+                min_value = -100,
+                max_value = 100,
+                value = 0,
+                step = 1,
+                format = "%dHz"
+            )
+
+        #converting rate_value and pitch_value to string 
+        rate = f"{rate_value:+d}%"
+        pitch = f"{pitch_value:+d}Hz"
+
+        #output filename
+        output_audio_filename = st.text_input(
+            "Output audio filename:",
+            value = "Result"
+        )
+        
+        #generate button and handling speech to speech
+        if st.button(
+            label = "Generate Speech",
+            type = "primary",
+            width = "stretch"
+            ):
+            
+            #error handling if no input auido file and voice
+            if not sts_input_audio:
+                st.error("Upload audio file")
+                st.stop()
+            if not voice.strip():
+                st.error("Please enter a voice.")
+                st.stop()
+            
+            #error handling
+            try:
+                
+                #shwoing spinner while converting speech
+                with st.spinner("Generating Speech"):
+
+                    #converting audio file into speech
+                    sts_output_text = stt_service.generate(sts_input_audio)
+                        
+                    #converting stt output (text) into selected voice output
+                    output_audio = asyncio.run(
+                        tts_service.generate_tts(
+                            text = sts_output_text,
+                            voice = voice,
+                            rate = rate,
+                            pitch = pitch
+                        )
+                    )
+
+                    if output_audio:
+                        st.audio(
+                            output_audio,
+                            format = "audio/wav"
+                        )
+                    
+                        #success message
+                        st.success("Speech generated successfully!")
+                    
+                        #celebrate TTS succss using ballons
+                        st.snow()
+
+                        #download button
+                        st.download_button(
+                            label = "Download Audio",
+                            data = output_audio,
+                            file_name = f"{output_audio_filename}.wav",
+                            mime = "audio/wav",
+                            type = "primary",
+                            width = "stretch"
+                        )
+
+            except Exception as e:
+                st.error(f"An error occurred during text generation: {e}")
+
+
 if __name__ == "__main__":
     main()
