@@ -3,7 +3,7 @@ from timbre_module.tts import Tts
 import asyncio
 from timbre_module.stt import Stt
 from timbre_module.polisher import Polisher
-
+from load_dotenv import load_dotenv
 
 @st.cache_resource
 def load_tts_service():
@@ -15,7 +15,10 @@ def load_stt_service(model="small"):
 
 @st.cache_resource
 def load_polishser_service(model="gemini-2.5-flash"):
-    return Polisher(model)  
+    return Polisher(model) 
+
+#load environment varibale once
+load_dotenv() 
 
 #initializing Polisher class
 polisher_service = load_polisher_service()
