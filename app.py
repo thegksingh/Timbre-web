@@ -4,6 +4,7 @@ import asyncio
 from timbre_module.stt import Stt
 from timbre_module.polisher import Polisher
 from dotenv import load_dotenv
+import json
 
 @st.cache_resource
 def load_tts_service():
@@ -17,6 +18,14 @@ def load_stt_service(model="small"):
 def load_polisher_service(model="gemini-2.5-flash"):
     return Polisher(model) 
 
+@st.cache_data
+def load_json():
+    #opening json file
+    with open("voices.json", "r") as f:
+        return json.load(f)
+
+#load json file
+voices = load_json()
 
 #load environment varibale once
 load_dotenv() 
@@ -60,16 +69,72 @@ def main():
             key = "tts-input"
         )
         #voice slection with default value 
-        #TODO: better selection for all voices
-        voice = st.text_input(
-            "Enter voice:",
-            value = "en-AU-NatashaNeural",
-            key = "tts-voice"
-        )
+        ##created 2 columns
+        col1,col2 = st.columns(2)
+
+        with col1:
+
+            #getting all language from json file and after sorting storing them in tts_languages_data variable
+            tts_languages_data = sorted({voice['language'] for voice in voices})
+    
+            #let user select language
+            tts_language_selected = st.selectbox(
+                "Select language",
+                options = tts_languages_data,
+                index = None
+            )
+    
+        with col2:
+
+            #gender selection
+            gender_selected = st.selectbox(
+                "Select gender",
+                options=[
+                "Male",
+                "Female"
+                ],
+                index = None
+            )
+
+        #created 2 more columns
+        col3,col4 = st.columns(2)
+
+
+        with col3:
+
+            #filter voices based on selected language
+            filtered_voices_language = [voice for voice in voices if voice['language'] == tts_language_selected]
+    
+            #sort availabel countries based on select language
+            countries = sorted({voice['country'] for voice in filtered_voices_language})
+
+            #country selection
+            country_selected = st.selectbox(
+            "Select country",
+            options=countries,
+            index = None
+            )
+
+        with col4:
+
+            #filtering  and sort personalities on basis of selected language,gender,country
+            filtered_personality = sorted({
+            voice['personality']
+            for voice in voices
+            if voice['language'] == tts_language_selected
+            and voice['country'] == country_selected
+            and voice['gender'] == gender_selected
+            })
+    
+            #personality selection
+            personality_selected = st.selectbox(
+                "Select personaliy",
+                options = filtered_personality
+            )
 
         #rate and pitch selection with sliders
-        col1, col2 = st.columns(2)
-        with col1:
+        col5, col6 = st.columns(2)
+        with col5:
             rate_value = st.slider(
                 "Select speech rate:",
                 min_value = -100,
@@ -79,7 +144,7 @@ def main():
                 format = "%d%%",
                 key = "tts-rate"
             )
-        with col2:
+        with col6:
             pitch_value = st.slider(
                 "Select speech pitch:",
                 min_value = -100,
@@ -111,10 +176,29 @@ def main():
             if not tts_input_text.strip():
                 st.error("Please enter text to convert.")
                 st.stop()
-            if not voice.strip():
-                st.error("Please enter a voice.")
+            if not tts_language_selected or not country_selected or not gender_selected or not personality_selected:
+                st.error("Please select voice input")
                 st.stop()
             
+            #initialize voice_name
+            voice_name = None
+
+            #getting voice name from json
+            for voice in voices:
+                if(voice['language'] == tts_language_selected
+                    and voice['country'] == country_selected
+                    and voice['gender'] == gender_selected
+                    and voice['personality'] == personality_selected):
+                    
+                    #retuning vaocie name
+                    voice_name = voice['name']
+                    break
+
+                    #if no voice found
+                    if not voice_name:
+                        st.error("Try different combination")
+                        st.stop()
+
             #error handling 
             try:
                 #showing spinner while generaitng speech
@@ -122,7 +206,7 @@ def main():
                     output_audio = asyncio.run(
                         tts_service.generate_tts(
                             text = tts_input_text,
-                            voice = voice,
+                            voice = voice_name,
                             rate = rate,
                             pitch = pitch
                         )
@@ -353,11 +437,68 @@ def main():
             sts_input_audio = st.file_uploader("Upload audio file:", type=["wav","mp3","m4a"],key="stp-same-language")
 
             #voice slection with default value 
-            #TODO: better selection for all voices
-            voice = st.text_input(
-                "Enter voice:",
-                value = "en-AU-NatashaNeural"
-            )
+            ##created 2 columns
+            col1,col2 = st.columns(2)
+
+            with col1:
+
+                #getting all language from json file and after sorting storing them in tts_languages_data variable
+                tts_languages_data = sorted({voice['language'] for voice in voices})
+    
+                #let user select language
+                tts_language_selected = st.selectbox(
+                   "Select language",
+                    options = tts_languages_data,
+                    index = None
+                )
+    
+            with col2:
+
+                #gender selection
+                gender_selected = st.selectbox(
+                    "Select gender",
+                    options=[
+                        "Male",
+                        "Female"
+                    ],
+                    index = None
+                )
+
+            #created 2 more columns
+            col3,col4 = st.columns(2)
+
+
+            with col3:
+
+                #filter voices based on selected language
+                filtered_voices_language = [voice for voice in voices if voice['language'] == tts_language_selected]
+    
+                #sort availabel countries based on select language
+                countries = sorted({voice['country'] for voice in filtered_voices_language})
+
+                #country selection
+                country_selected = st.selectbox(
+                    "Select country",
+                    options=countries,
+                    index = None
+                )
+
+            with col4:
+
+                #filtering  and sort personalities on basis of selected language,gender,country
+                filtered_personality = sorted({
+                    voice['personality']
+                    for voice in voices
+                        if voice['language'] == tts_language_selected
+                        and voice['country'] == country_selected
+                        and voice['gender'] == gender_selected
+                    })
+    
+                #personality selection
+                personality_selected = st.selectbox(
+                    "Select personaliy",
+                    options = filtered_personality
+                    )
 
             #rate and pitch selection with sliders
             col1, col2 = st.columns(2)
@@ -404,10 +545,29 @@ def main():
                 if not sts_input_audio:
                    st.error("Upload audio file")
                    st.stop()
-                if not voice.strip():
-                   st.error("Please enter a voice.")
+                if not tts_language_selected or not country_selected or not gender_selected or not personality_selected:
+                   st.error("Please select voice input")
                    st.stop()
-            
+                
+                #initialize voice_name
+                voice_name = None
+
+                #getting voice name from json
+                for voice in voices:
+                    if(voice['language'] == tts_language_selected
+                        and voice['country'] == country_selected
+                        and voice['gender'] == gender_selected
+                        and voice['personality'] == personality_selected):
+                
+                        #retuning vaocie name
+                        voice_name = voice['name']
+                        break
+                    
+                    #if no voice found
+                    if not voice_name:
+                        st.error("Try different combination")
+                        st.stop()
+
                 #error handling
                 try:
                 
@@ -428,7 +588,7 @@ def main():
                             output_audio = asyncio.run(
                                 tts_service.generate_tts(
                                    text = sts_enhancer_result,
-                                   voice = voice,
+                                   voice = voice_name,
                                    rate = rate,
                                    pitch = pitch
                                 )
@@ -471,11 +631,69 @@ def main():
             ) 
 
             #voice slection with default value 
-            #TODO: better selection for all voices
-            voice = st.text_input(
-                "Enter voice:",
-                value = "en-AU-NatashaNeural"
-            )
+            ##created 2 columns
+            col1,col2 = st.columns(2)
+
+            with col1:
+
+                #getting all language from json file and after sorting storing them in tts_languages_data variable
+                tts_languages_data = sorted({voice['language'] for voice in voices})
+    
+                #let user select language
+                tts_language_selected = st.selectbox(
+                   "Select language",
+                    options = tts_languages_data,
+                    index = None
+                )
+    
+            with col2:
+
+                #gender selection
+                gender_selected = st.selectbox(
+                    "Select gender",
+                    options=[
+                        "Male",
+                        "Female"
+                    ],
+                    index = None
+                )
+
+            #created 2 more columns
+            col3,col4 = st.columns(2)
+
+
+            with col3:
+
+                #filter voices based on selected language
+                filtered_voices_language = [voice for voice in voices if voice['language'] == tts_language_selected]
+    
+                #sort availabel countries based on select language
+                countries = sorted({voice['country'] for voice in filtered_voices_language})
+
+                #country selection
+                country_selected = st.selectbox(
+                    "Select country",
+                    options=countries,
+                    index = None
+                )
+
+            with col4:
+
+                #filtering  and sort personalities on basis of selected language,gender,country
+                filtered_personality = sorted({
+                    voice['personality']
+                    for voice in voices
+                        if voice['language'] == tts_language_selected
+                        and voice['country'] == country_selected
+                        and voice['gender'] == gender_selected
+                    })
+    
+                #personality selection
+                personality_selected = st.selectbox(
+                    "Select personaliy",
+                    options = filtered_personality
+                    )
+
             
             #rate and pitch selection with sliders
             col1, col2 = st.columns(2)
@@ -522,12 +740,31 @@ def main():
                 if not sts_input_audio_dif:
                    st.error("Upload audio file")
                    st.stop()
-                if not voice.strip():
-                   st.error("Please enter a voice.")
-                   st.stop()
                 if not sts_target_language.strip():
                     st.error("Language can't be empty")
                     st.stop()
+                if not tts_language_selected or not country_selected or not gender_selected or not personality_selected:
+                    st.error("Please select voice input")
+                    st.stop()
+
+                #initialize voice_name
+                voice_name = None
+
+                #getting voice name from json
+                for voice in voices:
+                    if(voice['language'] == tts_language_selected
+                        and voice['country'] == country_selected
+                        and voice['gender'] == gender_selected
+                        and voice['personality'] == personality_selected):
+                    
+                        #retuning vaocie name
+                        voice_name = voice['name']
+                        break
+
+                        #if no voice found
+                        if not voice_name:
+                            st.error("Try different combination")
+                            st.stop()
 
                 #error handling
                 try:
@@ -556,7 +793,7 @@ def main():
                                 output_audio = asyncio.run(
                                     tts_service.generate_tts(
                                         text = sts_enhancer_result_dif,
-                                        voice = voice,
+                                        voice = voice_name,
                                         rate = rate,
                                         pitch = pitch
                                     )
