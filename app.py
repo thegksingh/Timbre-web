@@ -3,7 +3,7 @@ from timbre_module.tts import Tts
 import asyncio
 from timbre_module.stt import Stt
 from timbre_module.polisher import Polisher
-
+from dotenv import load_dotenv
 
 @st.cache_resource
 def load_tts_service():
@@ -14,8 +14,11 @@ def load_stt_service(model="small"):
     return Stt(model)
 
 @st.cache_resource
-def load_polishser_service(model="gemini-2.5-flash"):
-    return Polisher(model)  
+def load_polisher_service(model="gemini-2.5-flash"):
+    return Polisher(model) 
+
+#load environment varibale once
+load_dotenv() 
 
 #initializing Polisher class
 polisher_service = load_polisher_service()
@@ -219,25 +222,28 @@ def main():
                 #error handling   
                 try:
 
-                #translating text to target language and detecting valid language
-                    translator_result = polisher_service.translator(
-                        text = translation_input_text,
-                        language = target_language
-                    )
-                    
-                    #print result
-                    if translator_result:
-                        st.text_area(
-                            "Translation result",
-                            value = translator_result,
-                            height = 200
+                    #showing spinner while translating text
+                    with st.spinner("Translating text, please wait..."):
+
+                        #translating text to target language and detecting valid language
+                        translator_result = polisher_service.translator(
+                            text = translation_input_text,
+                            language = target_language
                         )
+                    
+                        #print result
+                        if translator_result:
+                            st.text_area(
+                                "Translation result",
+                                value = translator_result,
+                                height = 200
+                            )
                         
-                        #success message
-                        st.success("Text translated.")
+                            #success message
+                            st.success("Text translated.")
                         
-                        #celebrating translation using snow
-                        st.snow()
+                            #celebrating translation using snow
+                            st.snow()
 
                 except Exception as e:
                     st.error(f"An error occured during translaton: {e}")
@@ -286,25 +292,28 @@ def main():
                 #error handling
                 try:
                     
-                    #enchancing text 
-                    enhancer_result = polisher_service.enhancer(
-                        text = enhancer_input_text,
-                        style = target_style
-                    )
-                    
-                    #print result
-                    if enhancer_result:
-                        st.text_area(
-                            "Enhanced text",
-                            value = enhancer_result,
-                            height = 200
-                        )
-                        
-                        #success message
-                        st.success("Text enhanced.")
+                    #showing spinner while enhancing text
+                    with st.spinner("Enhancing text, please wait..."):
 
-                        #celebrating enhancement using balloons
-                        st.balloons()
+                        #enhancing text 
+                        enhancer_result = polisher_service.enhancer(
+                            text = enhancer_input_text,
+                            style = target_style
+                        )
+                    
+                        #print result
+                        if enhancer_result:
+                            st.text_area(
+                                "Enhanced text",
+                                value = enhancer_result,
+                                height = 200
+                            )
+                        
+                            #success message
+                            st.success("Text enhanced.")
+
+                            #celebrating enhancement using balloons
+                            st.balloons()
 
                 except Exception as e:
                     st.error(f"An error occured during enhancement: {e}")
