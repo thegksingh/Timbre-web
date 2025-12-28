@@ -174,19 +174,27 @@ def main():
                 #showing spinner while generating text
                 with st.spinner("Generating text, please wait..."):
                     stt_output_text = stt_service.generate(input_audio)
-
-                    if stt_output_text:
-                        st.text_area(
-                            "Transcribed Text:",
-                            value = stt_output_text,
-                            height = 200
-                        )
                     
-                        #success message
-                        st.success("Text generated successfully!")
+                    #enhancing text to make sure grammer it correct
+                    if stt_output_text: 
+                        stt_enhancer_result = polisher_service.enhancer(
+                            text = stt_output_text,
+                            style = ""
+                        )
 
-                        #celebrating STT success using snow
-                        st.snow()
+                        #print result
+                        if stt_enhancer_result:
+                            st.text_area(
+                                "Transcribed Text:",
+                                value = stt_enhancer_result,
+                                height = 200
+                            )
+                    
+                            #success message
+                            st.success("Text generated successfully!")
+
+                            #celebrating STT success using snow
+                            st.snow()
 
             except Exception as e:
                 st.error(f"An error occurred during text generation: {e}")
@@ -384,40 +392,47 @@ def main():
                 #shwoing spinner while converting speech
                 with st.spinner("Generating Speech"):
 
-                    #converting audio file into speech
+                    #converting audio file into text
                     sts_output_text = stt_service.generate(sts_input_audio)
-                        
-                    #converting stt output (text) into selected voice output
-                    output_audio = asyncio.run(
-                        tts_service.generate_tts(
+                    
+                    #enhancing text to ensure grammar is correct
+                    if sts_output_text: 
+                        sts_enhancer_result = polisher_service.enhancer(
                             text = sts_output_text,
-                            voice = voice,
-                            rate = rate,
-                            pitch = pitch
+                            style = ""
                         )
-                    )
+                        
+                        #converting stt output (text) into selected voice output
+                        output_audio = asyncio.run(
+                            tts_service.generate_tts(
+                                text = sts_enhancer_result,
+                                voice = voice,
+                                rate = rate,
+                                pitch = pitch
+                            )
+                        )
 
-                    if output_audio:
-                        st.audio(
+                        if output_audio:
+                            st.audio(
                             output_audio,
                             format = "audio/wav"
-                        )
+                            )
                     
-                        #success message
-                        st.success("Speech generated successfully!")
+                            #success message
+                            st.success("Speech generated successfully!")
                     
-                        #celebrate TTS succss using ballons
-                        st.snow()
+                            #celebrate TTS succss using ballons
+                            st.snow()
 
-                        #download button
-                        st.download_button(
-                            label = "Download Audio",
-                            data = output_audio,
-                            file_name = f"{output_audio_filename}.wav",
-                            mime = "audio/wav",
-                            type = "primary",
-                            width = "stretch"
-                        )
+                            #download button
+                            st.download_button(
+                                label = "Download Audio",
+                                data = output_audio,
+                                file_name = f"{output_audio_filename}.wav",
+                                mime = "audio/wav",
+                                type = "primary",
+                                width = "stretch"
+                            )
 
             except Exception as e:
                 st.error(f"An error occurred during text generation: {e}")
