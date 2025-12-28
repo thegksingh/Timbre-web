@@ -41,7 +41,27 @@ stt_service = load_stt_service()
 
 def main():
     
+    st.set_page_config(page_title = "Timbre",layout = "wide")
+    
     st.markdown("<h1 style='color:#00E5FF;'>TIMBRE!</h1>", unsafe_allow_html=True)
+    
+    st.markdown("""
+    **Hi! I'm Gaurav Kumar Singh** – B.Sc (Hons) Botany student at BHU  
+    Completed **CS50P**, currently doing **CS50x**.  
+    """, unsafe_allow_html=True)
+    with st.expander("About Timbre"):
+        st.markdown("""
+        Timbre is an all-in-one AI-powered audio and text toolkit:  
+        - Convert text to speech (TTS)  
+        - Transcribe audio to text (STT)  
+        - Transform voices (STS)  
+        - Translate & enhance text (Text Polisher)  
+
+        **[View Certificate](https://cs50.harvard.edu/certificates/e728ee2a-5c54-43a5-a20f-3ee40369cb37)** <br> 
+        **[Video Demo](https://youtu.be/97bHyNIGS_Y?si=fdjtI00UgyOSM7ow)**<br>
+        **[Github](https://github.com/thegksingh)**
+
+        """, unsafe_allow_html=True)
 
     #letting user choose the service
     users_input = st.selectbox(
@@ -53,8 +73,8 @@ def main():
             "Text Polisher"
        ],
        index = None
-   )
-
+    )
+    
     #handling user choice
 
     #Text-to-speech
@@ -235,8 +255,21 @@ def main():
                     )
             except Exception as e:
                 st.error(f"An error occurred during speech generation: {e}")
-    
-   
+
+        #intructions and tips
+        st.markdown("<h3 style='color:#00E5FF;'>Instructions & Tips</h3>", unsafe_allow_html=True)
+        if users_input == "Text to Speech":
+            st.markdown("""
+            **How to use TTS:**  
+            1. Enter the text to convert.  
+            2. Select language, country, gender, personality.  
+            3. Adjust speech rate and pitch.  
+            4. Click **Generate Speech**.  
+
+            **Note:** If you select a different language than your input text, accent changes according to the language.  
+            Example: English input, Spanish voice → reads in Spanish accent.
+            """)
+
     #speech to text
     if users_input == "Speech to Text":
 
@@ -288,6 +321,16 @@ def main():
 
             except Exception as e:
                 st.error(f"An error occurred during text generation: {e}")
+
+        #instruction and tips
+        st.markdown("""
+        **How to use STT:**  
+        1. Upload audio (.wav, .mp3, .m4a).  
+        2. Whisper model default to small.  
+        3. Click **Generate Text**.  
+
+        **Tips:** Clear audio improves transcription.
+        """)
 
     
     #text polisher
@@ -347,6 +390,7 @@ def main():
 
                 except Exception as e:
                     st.error(f"An error occured during translaton: {e}")
+
             
         #handling user_choicce fro enhancer
         elif user_choice == "Enhancer":
@@ -418,6 +462,16 @@ def main():
 
                 except Exception as e:
                     st.error(f"An error occured during enhancement: {e}")
+
+        #instruction and tips
+        st.markdown("""
+        **How to use Text Polisher:**  
+        1. Enter text.  
+        2. Choose **Translator** or **Enhancer**.  
+        3. For translator, enter target language.  
+        4. For enhancer, select style (Professional, Conversational, etc.).  
+        5. Click **Translate** or **Enhance**.
+        """)
 
     #speech to speech
     if users_input == "Speech to Speech":
@@ -619,8 +673,9 @@ def main():
 
                 except Exception as e:
                     st.error(f"An error occurred during text generation: {e}")
+        
 
-        if choosen == "Cross-language speech translation":
+        elif choosen == "Cross-language speech translation":
              #storing uploded file into varaible into input_audio
             sts_input_audio_dif = st.file_uploader("Upload audio file:", type=["wav","mp3","m4a"],key="sts-diff-language")
 
@@ -823,6 +878,18 @@ def main():
 
                 except Exception as e:
                     st.error(f"An error occurred during text generation: {e}")
+
+        #instruction and tips
+        st.markdown("""
+        **How to use STS:**  
+        1. Upload audio.  
+        2. Choose Same-language or Cross-language.  
+        3. Select voice (language, country, gender, personality).  
+        4. Adjust rate & pitch.  
+        5. Click **Generate Speech**.  
+
+        **Tips:** Cross-language converts input text to target language before generating voice.
+        """)
 
 if __name__ == "__main__":
     main()
