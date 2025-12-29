@@ -2,7 +2,10 @@
 
 **TIMBRE!** is a high-performance, modular AI application designed to bridge the gap between speech and text. Built with a "Privacy-First" and "Efficiency-First" mindset, Timbre leverages state-of-the-art (SOTA) models like Google Gemini 2.5 Flash and OpenAI Whisper to provide a seamless multilingual experience.
 
-### Video Demo: cooming soon
+## 🚀 Live App
+Timbre: https://timbreai.streamlit.app
+
+## Video Demo: cooming soon
 
 - landing page
   ![Dashborad](assets/landing-page.png)
@@ -49,7 +52,7 @@ Timbre is organized into four core processing services, accessible via an intuit
 
 ## 🏗️ Modular Architecture
 ```
-timbre-web/
+Timbre-web/
 ├── .streamlit/
 │   └──config.toml             # Custom Theme
 ├── data/
@@ -73,7 +76,7 @@ timbre-web/
 ### 1️⃣ Clone the repository
 ```bash
 git clone https://github.com/thegksingh/Timbre-web.git
-cd Timbre
+cd Timbre-web
 ```
 
 ### 2️⃣ Create a virtual environment
