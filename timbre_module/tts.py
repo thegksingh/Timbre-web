@@ -48,7 +48,7 @@ class Tts:
         
         #raise exception when request was succeeded but no audio was received
         except edge_tts.exceptions.NoAudioReceived:
-            raise RuntimeError9Edge("TTS failed to generate audio.")
+            raise RuntimeError("TTS failed to generate audio.")
 
         except Exception as e:
             raise RuntimeError(f"TTS generation failed: {e}")           
