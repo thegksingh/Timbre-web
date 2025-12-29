@@ -4,24 +4,39 @@
 
 ### Video Demo: cooming soon
 
+- landing page
+  ![Dashborad](assets/landing-page.png)
+
 ## 🌟 Key Features
 Timbre is organized into four core processing services, accessible via an intuitive "Electric Cyan" themed dashboard:
 - **Speech to Text (STT):**
   High-accuracy transcription using the **OpenAI Whisper (Small)** model. Optimized for low-latency performance on cloud environments.
   - Audio → Text → Grammar enhancement
+  - screenshot
+    ![Dashborad](assets/stt.png)
 - **Text to Speech (TTS):**
   Generate natural-sounding neural voices in 100+ languages and accents. Features real-time streaming and adjustable speech rate/pitch and vocie selection.
   -  Audio → Text
+  - screenshot
+    ![Dashborad](assets/tts.png)
 - **🔄 Speech to Speech (STS):**
   - **Same-language conversion:** Transform your voice into different neural personalities.
      - Audio → Text → Grammar enhancement → Audio.
+     - screenshot
+       ![Dashborad](assets/sts-same.png)
   - **Cross-language translation:** Speak in one language and hear the output in another, preserving clarity and context.
      - Audio → Text → Translation → Grammar enhancement → Audio.
+     - screenshot
+       ![Dashborad](assets/sts-cross.png)
 - **Text Polisher:**
    - **Translator:** Professional-grade translation that preserves formatting.
       - Text → Translation
+      - screenshot
+        ![Dashborad](assets/polisher-translator.png)
    - **Enhancer:** Refine grammar and syntax or completely transform the tone (Professional, Creative, Technical, etc.) using Gemini 2.5 Flash.
       - Text → Grammar or Style enhancement 
+      - screenshot
+        ![Dashborad](assets/polisher-enhancer.png)
 ## 🛠️ The Tech Stack
 | Component | Technology |
 |----------|------------|
