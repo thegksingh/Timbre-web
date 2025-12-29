@@ -21,7 +21,7 @@ def load_polisher_service(model="gemini-2.5-flash"):
 @st.cache_data
 def load_json():
     #opening json file
-    with open("voices.json", "r") as f:
+    with open("data/voices.json", "r") as f:
         return json.load(f)
 
 #load json file
@@ -46,7 +46,8 @@ def main():
     st.markdown("<h1 style='color:#00E5FF;'>TIMBRE!</h1>", unsafe_allow_html=True)
     
     st.markdown("""
-    **Hi! I'm Gaurav Kumar Singh** – B.Sc (Hons) Botany student at BHU  
+    **Hi! I'm Gaurav Kumar Singh** – AI & Software Enthusiast. Undergraduate student at BHU.
+    I build AI-powered tools for text and audio processing. This project demonstrates my skills.  
     Completed **CS50P**, currently doing **CS50x**.  
     """, unsafe_allow_html=True)
     with st.expander("About Timbre"):
@@ -57,10 +58,7 @@ def main():
         - Transform voices (STS)  
         - Translate & enhance text (Text Polisher)  
 
-        **[View Certificate](https://cs50.harvard.edu/certificates/e728ee2a-5c54-43a5-a20f-3ee40369cb37)** <br> 
-        **[Video Demo](https://youtu.be/97bHyNIGS_Y?si=fdjtI00UgyOSM7ow)**<br>
-        **[Github](https://github.com/thegksingh)**
-
+        **[Project Documentation](https://github.com/thegksingh/timbre-web#readme)** 
         """, unsafe_allow_html=True)
 
     #letting user choose the service
