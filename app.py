@@ -879,9 +879,9 @@ def main():
 
         #instruction and tips
         st.markdown("""
-        **How to use STS:**  
-        1. Upload audio.  
-        2. Choose Same-language or Cross-language.  
+        **How to use STS:**    
+        1. Choose Same-language or Cross-language.
+        2. Upload audio.
         3. Select voice (language, country, gender, personality).  
         4. Adjust rate & pitch.  
         5. Click **Generate Speech**.  
