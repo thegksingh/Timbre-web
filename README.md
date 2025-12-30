@@ -65,6 +65,7 @@ Timbre-web/
 ├── scripts/                   # Automation
 │   └── voice_extractor.py     # Automated data pipeline for voices
 ├── app.py                     # Streamlit Main Interface
+├── .gitignore
 ├── requirements.txt           # Python Dependencies
 ├── packages.txt               # OS-level dependencies (ffmpeg)
 └── LICENSE.txt                 
